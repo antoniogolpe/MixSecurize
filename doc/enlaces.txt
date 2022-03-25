@@ -1,0 +1,5 @@
+Video: https://www.youtube.com/watch?v=6fnQxYVPBp4
+Referencia na libraría estándar: https://hexdocs.pm/elixir/1.13/syntax-reference.html#the-elixir-ast
+Un post que o explica moi sinxelo: https://by-cha.se/working-with-the-elixir-ast.html
+Un post que o explica máis en profundidade: https://dorgan.netlify.app/posts/2021/04/the_elixir_ast_analyzer/
+Unha ferramenta para "xogar" coa correspondencia código <=> AST (útil para debugging!): https://ast.ninja/

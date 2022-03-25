@@ -1,0 +1,15 @@
+--------Uso de os:cmd--------
+Comprobar los parametros de entrada al usar os:cmd/1
+
+
+--------CVE-2017-1000052--------
+Null Byte Injection in Plug.Static
+
+Elixir Plug before v1.0.4, v1.1.7, v1.2.3 and v1.3.2 
+is vulnerable to null byte injection in the Plug.Static component, 
+which may allow users to bypass filetype restrictions.
+
+--------CVE-2017-1000053--------
+Arbitrary Code Execution in Cookie Serialization
+Elixir Plug before v1.0.4, v1.1.7, v1.2.3 and v1.3.2 
+is vulnerable to arbitrary code execution in the deserialization functions of Plug.Session.
