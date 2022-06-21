@@ -9,7 +9,7 @@ defmodule Securize do
     @callback run(ast :: any) :: [issue]
   end
 
-  @checkers [UnsafeToAtomCheck,MultiAliasCheck]
+  @checkers [UnsafeToAtomCheck,MultiAliasCheck,Cmd,ObserverStart]
 
   def fileToQuoted(file) do
     ast =
