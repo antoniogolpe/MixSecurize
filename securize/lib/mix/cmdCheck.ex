@@ -4,7 +4,7 @@ defmodule Cmd do
   @message "cmd error"
 
     @impl true
-    def run(ast) do
+    def run(ast, _) do
       {_ast, issues} = Macro.postwalk(ast, [], &traverse/2)
       issues
     end

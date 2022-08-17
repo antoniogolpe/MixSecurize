@@ -6,12 +6,13 @@ defmodule Securize do
       columns: integer
     }
 
-    @callback run(ast :: any) :: [issue]
+    @callback run(ast :: any, deps:: any) :: [issue]
   end
 
-  @checkers [UnsafeToAtomCheck,MultiAliasCheck,Cmd,ObserverStart]
+  #@checkers [UnsafeToAtomCheck,MultiAliasCheck,Cmd,CookieSecurity,PugStaticCheck]
+  @checkers [PugStaticCheck]
 
-  def fileToQuoted(file) do
+  def fileToQuoted(file, deps) do
     ast =
       file
       |> Path.expand()
@@ -21,10 +22,14 @@ defmodule Securize do
     #IO.inspect(ast)
 
     issues =
-      Enum.map(@checkers, fn checker -> checker.run(ast) end)
+      Enum.map(@checkers, fn checker -> checker.run(ast, deps) end)
       |> List.flatten()
 
-    Enum.each(issues, fn issue -> print_issue(file, issue) end)
+    if(Enum.empty?(issues)) do
+       "No se encontro ninguna vulnerabilidad"|> IO.puts
+    else
+      Enum.each(issues, fn issue -> print_issue(file, issue) end)
+    end
 
     :ok
   end
@@ -41,8 +46,13 @@ defmodule Securize do
     |> IO.puts
   end
 
-  def securize(args) do
-    Enum.map(args, fn x -> fileToQuoted(x) end)
+  def securize(args, filesAuxs) do
+    #deps = Enum.concat(Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end))
+    #deps = Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end)
+    deps =Enum.reduce(Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end), fn x, y ->
+      Map.merge(x, y, fn _k, v1, v2 -> v2 ++ v1 end)
+   end)
+    Enum.map(args, fn x -> fileToQuoted(x,deps) end)
   end
 
 end
