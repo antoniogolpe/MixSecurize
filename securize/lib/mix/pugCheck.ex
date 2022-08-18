@@ -1,9 +1,9 @@
-defmodule PugStaticCheck do
+defmodule PugCheck do
   @behaviour Securize.Checker
 
   @messageStatic "Attention! This Plug Static version is vulnerable to null byte injection. We recommend upgrade it immediately."
   @messageSession "Attention! This Plug Session version is vulnerable to code injecting. We recommend upgrade it immediately."
-  @messageNoVersion "Attention! Pug library version could not be detected. we recommend having it updated."
+  @messageNoVersion "Attention! Pug library version could not be detected. We recommend having it updated."
 
   @impl true
   def run(ast, deps) do
@@ -20,14 +20,11 @@ defmodule PugStaticCheck do
 
   end
 
-  defp traverse({
-    :__aliases__, meta, [:Plug, :Static]
-  } = node, [acc, deps]) do
-
+  defp detectVulnerability(node, [acc, deps], meta, message) do
     if(Map.has_key?(deps, :plug)) do
       if(checkVersion(deps)) do
         issue = %{
-          message: @messageStatic,
+          message: message,
           line: meta[:line],
           column: meta[:column]
         }
@@ -46,28 +43,15 @@ defmodule PugStaticCheck do
   end
 
   defp traverse({
-    :__aliases__, meta, [:Plug, :Session]
-  } = node, [acc, deps]) do
+    :__aliases__, meta, [:Plug, :Static]
+  } = node, acc) do
+    detectVulnerability(node, acc, meta, @messageStatic)
+  end
 
-    if(Map.has_key?(deps, :plug)) do
-      if(checkVersion(deps)) do
-        issue = %{
-          message: @messageSession,
-          line: meta[:line],
-          column: meta[:column]
-        }
-        {node, [[issue | acc], deps]}
-      else
-        {node, [acc, deps]}
-      end
-    else
-      issue = %{
-        message: @messageNoVersion,
-        line: meta[:line],
-        column: meta[:column]
-      }
-      {node, [[issue | acc], deps]}
-    end
+  defp traverse({
+    :__aliases__, meta, [:Plug, :Session]
+  } = node, acc) do
+    detectVulnerability(node, acc, meta, @messageSession)
   end
 
   defp traverse(node, acc), do: {node, acc}

@@ -1,6 +1,5 @@
 defmodule FindDeps do
 
-
   defp traverse({:plug, texto}=node,acc) do
     version = Regex.scan(~r/[0-9.]+/,texto)|> List.flatten()
     {node, Map.put_new(acc, :plug, version)}
@@ -9,6 +8,16 @@ defmodule FindDeps do
   defp traverse({:{}, [_,_], [:plug, texto, [_]]} = node, acc) do
     version = Regex.scan(~r/[0-9.]+/,texto)|> List.flatten()
     {node, Map.put_new(acc, :plug, version)}
+  end
+
+  defp traverse({:paginator, texto}=node,acc) do
+    version = Regex.scan(~r/[0-9.]+/,texto)|> List.flatten()
+    {node, Map.put_new(acc, :paginator, version)}
+  end
+
+  defp traverse({:{}, [_,_], [:paginator, texto, [_]]} = node, acc) do
+    version = Regex.scan(~r/[0-9.]+/,texto)|> List.flatten()
+    {node, Map.put_new(acc, :paginator, version)}
   end
 
   defp traverse(node, acc) do

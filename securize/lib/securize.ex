@@ -9,8 +9,7 @@ defmodule Securize do
     @callback run(ast :: any, deps:: any) :: [issue]
   end
 
-  #@checkers [UnsafeToAtomCheck,MultiAliasCheck,Cmd,CookieSecurity,PugStaticCheck]
-  @checkers [PugStaticCheck]
+  @checkers [UnsafeToAtomCheck,MultiAliasCheck,Cmd,CookieSecurity,PugCheck,PaginatorCheck]
 
   def fileToQuoted(file, deps) do
     ast =
@@ -49,10 +48,14 @@ defmodule Securize do
   def securize(args, filesAuxs) do
     #deps = Enum.concat(Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end))
     #deps = Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end)
-    deps =Enum.reduce(Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end), fn x, y ->
-      Map.merge(x, y, fn _k, v1, v2 -> v2 ++ v1 end)
-   end)
-    Enum.map(args, fn x -> fileToQuoted(x,deps) end)
+    listDeps = Enum.map(filesAuxs, fn exs -> FindDeps.findDeps2(exs) end)
+    if(!Enum.empty?(listDeps)) do
+      deps = Enum.reduce(listDeps, fn x, y ->
+          Map.merge(x, y, fn _k, v1, v2 -> v2 ++ v1 end)end)
+      Enum.map(args, fn x -> fileToQuoted(x,deps) end)
+    else
+      Enum.map(args, fn x -> fileToQuoted(x,%{}) end)
+    end
   end
 
 end
