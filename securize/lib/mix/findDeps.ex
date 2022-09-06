@@ -24,7 +24,7 @@ defmodule FindDeps do
     {node,acc}
   end
 
-  def findDeps(file) do
+  def findDeps2(file) do
     a = file
     |> Path.expand()
     |> File.read!()
@@ -40,7 +40,7 @@ defmodule FindDeps do
 
   end
 
-  def findDeps2(file) do
+  def findDeps(file) do
     ast =
       file
       |> Path.expand()

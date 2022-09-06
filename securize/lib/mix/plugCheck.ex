@@ -1,9 +1,9 @@
-defmodule PugCheck do
+defmodule PlugChecker do
   @behaviour Securize.Checker
 
   @messageStatic "Attention! This Plug Static version is vulnerable to null byte injection. We recommend upgrade it immediately."
   @messageSession "Attention! This Plug Session version is vulnerable to code injecting. We recommend upgrade it immediately."
-  @messageNoVersion "Attention! Pug library version could not be detected. We recommend having it updated."
+  @messageNoVersion "Attention! Plug library version could not be detected. We recommend having it updated."
 
   @impl true
   def run(ast, deps) do

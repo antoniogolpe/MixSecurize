@@ -1,4 +1,4 @@
-defmodule CookieSecurity do
+defmodule CookieSecurityChecker do
   @behaviour Securize.Checker
 
   #:erlang.set_cookie/2

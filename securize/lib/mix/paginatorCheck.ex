@@ -1,8 +1,8 @@
-defmodule PaginatorCheck do
+defmodule PaginatorChecker do
   @behaviour Securize.Checker
 
   @message "Attention! This Paginator version has a vulnerability. We recommend upgrade it immediately."
-  @messageNoVersion "Attention! Paginator library version could not be detected. we recommend having it updated. We recommend having it updated."
+  @messageNoVersion "Attention! Paginator library version could not be detected. We recommend having it updated."
 
     @impl true
     def run(ast, deps) do

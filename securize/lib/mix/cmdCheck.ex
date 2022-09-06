@@ -1,7 +1,7 @@
-defmodule Cmd do
+defmodule CmdChecker do
   @behaviour Securize.Checker
 
-  @message "cmd error"
+  @message "Attention! You are using the cmd function. We recommend validating the arguments before sending them"
 
     @impl true
     def run(ast, _) do
@@ -10,7 +10,7 @@ defmodule Cmd do
     end
 
     defp traverse({
-      {:.,_,[:os, :cmd]},meta,_
+      {:.,_,[:os, :cmd]},meta,[{_,_,_}]
     } = node, acc) do
       issue = %{
         message: @message,
@@ -21,4 +21,5 @@ defmodule Cmd do
     end
 
     defp traverse(node, acc), do: {node, acc}
-  end
+
+end
